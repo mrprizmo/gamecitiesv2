@@ -125,11 +125,6 @@ def play_game(res, req):
         res['response']['card']['image_id'] = cities[city][attempt - 1]
         res['response']['text'] = 'Тогда сыграем!'
     else:
-        res['response']['buttons'] = [
-            {
-                'title': 'помощь',
-                'hide': True
-            }, ]
         # сюда попадаем, если попытка отгадать не первая
         city = sessionStorage[user_id]['city']
         # проверяем есть ли правильный ответ в сообщение
