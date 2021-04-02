@@ -104,6 +104,11 @@ def handle_dialog(res, req):
 
 def play_game(res, req):
     user_id = req['session']['user_id']
+    res['response']['buttons'] = [
+        {
+            'title': 'помощь',
+            'hide': True
+        }, ]
     attempt = sessionStorage[user_id]['attempt']
     if attempt == 1:
         # если попытка первая, то случайным образом выбираем город для гадания
@@ -126,7 +131,7 @@ def play_game(res, req):
         # проверяем есть ли правильный ответ в сообщение
         if "помощь" in req['request']["tokens"]:
             res['response']['text'] = f"attempts:{attempt}"
-        if get_city(req) == city:
+        elif get_city(req) == city:
             # если да, то добавляем город к sessionStorage[user_id]['guessed_cities'] и
             # отправляем пользователя на второй круг. Обратите внимание на этот шаг на схеме.
             res['response']['text'] = 'Правильно! Сыграем ещё?'
@@ -174,5 +179,5 @@ def get_first_name(req):
 
 
 if __name__ == '__main__':
-    port = int(os.environ("PORT", 5000))
+    port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port)
