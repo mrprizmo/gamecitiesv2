@@ -130,6 +130,11 @@ def play_game(res, req):
         # проверяем есть ли правильный ответ в сообщение
         if "помощь" in req['request']["nlu"]["tokens"]:
             res['response']['text'] = f"attempts:{attempt - 1}"
+            res['response']['buttons'] = [
+                {
+                    'title': 'помощь',
+                    'hide': True
+                }, ]
             return
         if get_city(req) == city:
             # если да, то добавляем город к sessionStorage[user_id]['guessed_cities'] и
