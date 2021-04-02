@@ -119,10 +119,13 @@ def play_game(res, req):
         res['response']['card']['title'] = 'Что это за город?'
         res['response']['card']['image_id'] = cities[city][attempt - 1]
         res['response']['text'] = 'Тогда сыграем!'
+        sessionStorage[user_id]['attempt'] += 1
     else:
         # сюда попадаем, если попытка отгадать не первая
         city = sessionStorage[user_id]['city']
         # проверяем есть ли правильный ответ в сообщение
+        if "помощь" in req['request']["tokens"]:
+            res['response']['text'] = f"attempts:{attempt}"
         if get_city(req) == city:
             # если да, то добавляем город к sessionStorage[user_id]['guessed_cities'] и
             # отправляем пользователя на второй круг. Обратите внимание на этот шаг на схеме.
@@ -148,8 +151,7 @@ def play_game(res, req):
                 res['response']['card']['title'] = 'Неправильно. Вот тебе дополнительное фото'
                 res['response']['card']['image_id'] = cities[city][attempt - 1]
                 res['response']['text'] = 'А вот и не угадал!'
-    # увеличиваем номер попытки доля следующего шага
-    sessionStorage[user_id]['attempt'] += 1
+            sessionStorage[user_id]['attempt'] += 1
 
 
 def get_city(req):
@@ -172,5 +174,5 @@ def get_first_name(req):
 
 
 if __name__ == '__main__':
-    port = int(os.environ.get("PORT", 5000))
+    port = int(os.environ("PORT", 5000))
     app.run(host="0.0.0.0", port=port)
