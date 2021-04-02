@@ -104,13 +104,13 @@ def handle_dialog(res, req):
 
 def play_game(res, req):
     user_id = req['session']['user_id']
-    res['response']['buttons'] = [
-        {
-            'title': 'помощь',
-            'hide': True
-        }, ]
     attempt = sessionStorage[user_id]['attempt']
     if attempt == 1:
+        res['response']['buttons'] = [
+            {
+                'title': 'помощь',
+                'hide': True
+            }, ]
         # если попытка первая, то случайным образом выбираем город для гадания
         city = random.choice(list(cities))
         # выбираем его до тех пор пока не выбираем город, которого нет в sessionStorage[user_id]['guessed_cities']
@@ -125,6 +125,11 @@ def play_game(res, req):
         res['response']['card']['image_id'] = cities[city][attempt - 1]
         res['response']['text'] = 'Тогда сыграем!'
     else:
+        res['response']['buttons'] = [
+            {
+                'title': 'помощь',
+                'hide': True
+            }, ]
         # сюда попадаем, если попытка отгадать не первая
         city = sessionStorage[user_id]['city']
         # проверяем есть ли правильный ответ в сообщение
@@ -150,6 +155,11 @@ def play_game(res, req):
                 sessionStorage[user_id]['guessed_cities'].append(city)
                 return
             else:
+                res['response']['buttons'] = [
+                    {
+                        'title': 'помощь',
+                        'hide': True
+                    }, ]
                 # иначе показываем следующую картинку
                 res['response']['card'] = {}
                 res['response']['card']['type'] = 'BigImage'
